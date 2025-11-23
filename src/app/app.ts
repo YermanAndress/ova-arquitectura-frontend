@@ -1,12 +1,11 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+import { Pregunta } from './pages/pregunta/pregunta';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrls: ['./app.css'],
+  imports: [Pregunta]
 })
-export class App {
-  protected readonly title = signal('ova-arquitectura-frontend');
-}
+export class App {}

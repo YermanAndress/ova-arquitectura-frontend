@@ -1,0 +1,19 @@
+<div class="p-6 max-w-xl mx-auto bg-white rounded-lg shadow">
+  <h2 class="text-xl font-bold mb-4">{{ pregunta?.texto }}</h2>
+
+  <div class="space-y-3">
+    <button
+      *ngFor="let op of pregunta?.opciones; let i = index"
+      (click)="responder(i)"
+      class="w-full p-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition"
+    >
+      {{ op.texto }}
+    </button>
+  </div>
+
+  <div *ngIf="resultado" class="mt-5 p-3 rounded-lg text-white"
+       [class.bg-green-500]="resultado.resultado"
+       [class.bg-red-500]="!resultado.resultado">
+    {{ resultado.mensaje }}
+  </div>
+</div>
