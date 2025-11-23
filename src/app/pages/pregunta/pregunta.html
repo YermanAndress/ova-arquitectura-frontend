@@ -1,19 +1,78 @@
-<div class="p-6 max-w-xl mx-auto bg-white rounded-lg shadow">
-  <h2 class="text-xl font-bold mb-4">{{ pregunta?.texto }}</h2>
+<div class="p-6 max-w-xl mx-auto bg-white rounded-lg shadow-lg">
 
-  <div class="space-y-3">
-    <button
-      *ngFor="let op of pregunta?.opciones; let i = index"
-      (click)="responder(i)"
-      class="w-full p-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition"
-    >
-      {{ op.texto }}
-    </button>
-  </div>
+  <!-- Estado de carga -->
+  @if (cargando) {
+    <div class="text-center py-8">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      <p class="mt-3 text-gray-600">Cargando...</p>
+    </div>
+  }
 
-  <div *ngIf="resultado" class="mt-5 p-3 rounded-lg text-white"
-       [class.bg-green-500]="resultado.resultado"
-       [class.bg-red-500]="!resultado.resultado">
-    {{ resultado.mensaje }}
-  </div>
+  <!-- Error -->
+  @if (error) {
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+      <p class="font-bold">Error</p>
+      <p>{{ error }}</p>
+
+      <button 
+        (click)="reintentar()"
+        class="mt-3 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">
+        Reintentar
+      </button>
+    </div>
+  }
+
+  <!-- Pregunta -->
+  @if (pregunta && !cargando && !error) {
+    <div>
+      <h2 class="text-2xl font-bold mb-6 text-gray-800">{{ pregunta.texto }}</h2>
+
+      <div class="space-y-3">
+
+      @for (op of pregunta.opciones; track $index; let i = $index) {
+        <button
+          (click)="responder(i)"
+          [disabled]="resultado !== null"
+          class="w-full p-4 text-left rounded-lg transition-all transform hover:scale-102 disabled:opacity-50 disabled:cursor-not-allowed"
+          [class]="resultado === null 
+            ? 'bg-blue-500 hover:bg-blue-600 text-white' 
+            : 'bg-gray-300 text-gray-600'">
+
+          <span class="font-medium">{{ op.texto }}</span>
+        </button>
+      }
+
+
+      </div>
+
+      <!-- Resultado -->
+      @if (resultado) {
+        <div 
+          class="mt-6 p-4 rounded-lg text-white text-center font-semibold animate-fade-in"
+          [class]="resultado.resultado ? 'bg-green-500' : 'bg-red-500'">
+          
+          {{ resultado.mensaje }}
+
+          <button 
+            (click)="reintentar()"
+            class="mt-3 bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded">
+            Nueva pregunta
+          </button>
+        </div>
+      }
+
+    </div>
+  }
+
 </div>
+
+<style>
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+</style>
